@@ -28,18 +28,21 @@ jobs:
           #        Actions runner is implemented. Remove this workaround when
           #        GitHub comes up with a fundamental fix for this problem.
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-    # - name: Checkout Zephyr
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: 'zephyrproject-rtos/zephyr'
-    #     path: 'zephyr'
+     - name: Checkout Zephyr
+       uses: actions/checkout@v3
+       with:
+         repository: 'zephyrproject-rtos/zephyr'
+         path: 'zephyr'
       - name: Checkout Twister
         uses: actions/checkout@v3
+        path: twisterV2
       - name: Install twister
+        working-directory: twisterV2
         run: |
           pip install -r requirements.txt -r requirements-tests.txt -r requirements-dev.txt
           pip install .
       - name: Run twister
+        working-directory: zephyr
         run: |
           tree
           pytest zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr/zephyr 
