@@ -50,5 +50,7 @@ jobs:
       - name: Run twister
         working-directory: zephyr
         run: |
-          ZEPHYR_BASE=$(pwd)
+          ZEPHYR_BASE=$PWD
+          echo $ZEPHYR_BASE
+          echo $PWD
           pytest /tests/kernel/common -v -v
