@@ -50,7 +50,5 @@ jobs:
       - name: Run twister
         working-directory: zephyr
         run: |
-          sudo apt update
-          sudo apt-get install tree
-          tree
-          pytest ./zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr 
+          ZEPHYR_BASE=$(pwd)
+          pytest /tests/kernel/common -v -v
