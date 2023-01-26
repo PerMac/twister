@@ -38,7 +38,8 @@ jobs:
 
       - name: Checkout Twister
         uses: actions/checkout@v3
-        path: twisterV2
+        with:
+          path: twisterV2
 
       - name: Install twister
         working-directory: twisterV2
