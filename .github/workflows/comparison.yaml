@@ -38,6 +38,7 @@ jobs:
       - name: Install twister
         run: |
           pip install -r requirements.txt -r requirements-tests.txt -r requirements-dev.txt
+          pip install .
       - name: Run twister
         run: |
           pytest zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr 
