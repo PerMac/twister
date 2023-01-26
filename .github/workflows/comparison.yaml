@@ -41,4 +41,5 @@ jobs:
           pip install .
       - name: Run twister
         run: |
-          pytest zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr 
+          tree
+          pytest zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr/zephyr 
