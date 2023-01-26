@@ -1,3 +1,5 @@
+name: Run tests with twister V2
+
 on:
   workflow_dispatch:
     inputs:
@@ -5,8 +7,9 @@ on:
         description: 'Args passed to twister call'
         required: true
   pull_request:
-      branches:
+    branches:
       - main
+
 jobs:
   twister-build-prep:
     runs-on: ubuntu-latest
@@ -14,9 +17,9 @@ jobs:
       image: ghcr.io/zephyrproject-rtos/ci:v0.24.6
       options: '--entrypoint /bin/bash'
     env:
-     MATRIX_SIZE: 10
-     ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains/zephyr-sdk-0.15.2
-     BASE_REF: ${{ github.base_ref }}
+      MATRIX_SIZE: 10
+      ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains/zephyr-sdk-0.15.2
+      BASE_REF: ${{ github.base_ref }}
     steps:
       - name: Apply container owner mismatch workaround
         run: |
@@ -30,12 +33,11 @@ jobs:
     #   with:
     #     repository: 'zephyrproject-rtos/zephyr'
     #     path: 'zephyr'
-    - name: Checkout Twister
-      uses: actions/checkout@v3
-    - name: Install twister
-      run: |
-        tree
-        pip install -r requirements.txt -r requirements-tests.txt -r requirements-dev.txt
-    - name: Run twister
-      run: |
-        pytest zephyr/tests/kernel/common -v --zephyr-base=./zephyr
+      - name: Checkout Twister
+        uses: actions/checkout@v3
+      - name: Install twister
+        run: |
+          pip install -r requirements.txt -r requirements-tests.txt -r requirements-dev.txt
+      - name: Run twister
+        run: |
+          pytest zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr 
