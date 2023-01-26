@@ -11,8 +11,9 @@ on:
       - main
 
 jobs:
-  setup:
+  twisterV2:
     runs-on: ubuntu-latest
+    name: Run tests with twisterv2
     container:
       image: ghcr.io/zephyrproject-rtos/ci:v0.24.6
       options: '--entrypoint /bin/bash'
@@ -29,11 +30,11 @@ jobs:
           #        GitHub comes up with a fundamental fix for this problem.
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
-     - name: Checkout Zephyr
-       uses: actions/checkout@v3
-       with:
-         repository: 'zephyrproject-rtos/zephyr'
-         path: 'zephyr'
+      - name: Checkout Zephyr
+        uses: actions/checkout@v3
+        with:
+          repository: 'zephyrproject-rtos/zephyr'
+          path: 'zephyr'
 
       - name: Checkout Twister
         uses: actions/checkout@v3
