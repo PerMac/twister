@@ -50,4 +50,6 @@ jobs:
       - name: Run twister
         working-directory: zephyr
         run: |
-          pytest zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr/zephyr 
+          sudo apt-get install tree
+          tree
+          pytest ./zephyr/tests/kernel/common -v -v --zephyr-base=./zephyr 
