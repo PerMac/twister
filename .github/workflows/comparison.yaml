@@ -13,10 +13,10 @@ jobs:
     # container:
     #   image: ghcr.io/zephyrproject-rtos/ci:v0.24.6
     #   options: '--entrypoint /bin/bash'
-    env:
-      MATRIX_SIZE: 10
-      ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains/zephyr-sdk-0.15.2
-      BASE_REF: ${{ github.base_ref }}
+    # env:
+    #  MATRIX_SIZE: 10
+    #  ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains/zephyr-sdk-0.15.2
+    #  BASE_REF: ${{ github.base_ref }}
     # steps:
     #   - name: Apply container owner mismatch workaround
     #     run: |
