@@ -60,4 +60,4 @@ jobs:
           export ZEPHYR_BASE=$PWD
           west init -l . || true
 
-          pytest tests/kernel/common -v -v
+          pytest tests/kernel/common -v -v --results-json=twister-out/results.json
