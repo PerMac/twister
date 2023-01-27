@@ -9,6 +9,13 @@ on:
   pull_request:
     branches:
       - main
+  workflow_call:
+    inputs:
+      scope:
+        description: 'A scope to scan for tests'
+        default: 'tests/kernel/common'
+        required: false
+        type: string
 
 jobs:
   twisterV2:
@@ -51,4 +58,4 @@ jobs:
         working-directory: zephyr
         run: |
           export ZEPHYR_BASE=$PWD
-          pytest /tests/kernel/common -v -v
+          pytest tests/kernel/common -v -v
