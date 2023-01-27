@@ -58,4 +58,6 @@ jobs:
         working-directory: zephyr
         run: |
           export ZEPHYR_BASE=$PWD
+          west init -l . || true
+
           pytest tests/kernel/common -v -v
