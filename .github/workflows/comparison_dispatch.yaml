@@ -13,7 +13,18 @@ on:
       - main
 
 jobs:
-  call-workflow-passing-data:
+  call-v2-passing-data:
     uses: ./.github/workflows/comparison_v2.yaml
     with:
       scope: ${{ inputs.scope }}
+
+  download-artifacts-v2:
+    - uses: actions/download-artifact@v3
+      needs: [call-v2-passing-data]
+      with:
+        path: results/resv2
+
+- name: Display structure of downloaded files
+  working-directory: results
+  run: |
+    ls -R
