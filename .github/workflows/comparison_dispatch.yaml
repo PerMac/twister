@@ -19,7 +19,7 @@ jobs:
       scope: ${{ inputs.scope }}
 
   handle-v2-reports:
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
     name: Prepare v2 report
     if: ${{ always() }}
     needs: [call-v2-passing-data]
