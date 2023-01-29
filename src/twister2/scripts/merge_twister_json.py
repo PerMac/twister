@@ -2,7 +2,6 @@ import argparse
 import glob
 import json
 import os
-import zipfile
 
 from collections import OrderedDict
 from pathlib import Path
@@ -38,15 +37,10 @@ def merge_json_v2(reports=None, path_to=None):
 
                 merged_json_v2["tests"].extend(loaded_json["tests"])
 
-    with open(path_to / 'results_merged.json', 'w') as output_file:
+    with open(path_to / 'results_v2_merged.json', 'w') as output_file:
         json.dump(merged_json_v2, output_file, indent=4)
 
     return 0
-
-
-def unzip_reports(path_from, path_to):
-    with zipfile.ZipFile(path_from, 'r') as zip_ref:
-        zip_ref.extractall(path_to)
 
 
 def get_reports_paths(path_to):
@@ -60,11 +54,6 @@ def get_reports_paths(path_to):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--path-to',
-        action='store',
-        help='Path to where unzip reports',
-    )
     # TODO: Add mutualy exclusive v1 and v2 workflows
     parser.add_argument(
         '--v1-reports',
@@ -80,27 +69,17 @@ def main():
     )
     args = parser.parse_args()
 
-    if not args.path_to:
-        print("Missing 'path_to' arg")
-        return 1
-    path_to = Path(args.path_to)
-
     if args.v1_reports and args.v2_reports:
         print("Only single type at once supported")
     elif args.v1_reports:
-        reports_ziped = args.v1_reports
+        reports_to_merge = get_reports_paths(Path(args.v1_reports))
+        merge_json_v1(reports_to_merge, Path(args.v1_reports))
     elif args.v2_reports:
-        reports_ziped = args.v2_reports
+        reports_to_merge = get_reports_paths(Path(args.v2_reports))
+        merge_json_v2(reports_to_merge, Path(args.v2_reports))
     else:
         print("No reports chosen")
         os.exit(1)
-
-    unzip_reports(reports_ziped, path_to)
-    reports_to_merge = get_reports_paths(path_to)
-    if args.v1_reports:
-        merge_json_v1(reports_to_merge, path_to)
-    if args.v2_reports:
-        merge_json_v2(reports_to_merge, path_to)
 
     print(f"Successfuly merged {len(reports_to_merge)} reports")
     return 0
