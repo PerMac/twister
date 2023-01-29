@@ -24,7 +24,7 @@ jobs:
       with:
         path: results/resv2
 
-- name: Display structure of downloaded files
+  name: Display structure of downloaded files
   working-directory: results
   run: |
     ls -R
