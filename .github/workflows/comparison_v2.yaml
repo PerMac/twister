@@ -69,7 +69,8 @@ jobs:
       - name: Run twister
         working-directory: zephyr
         run: |
-          pytest ${{ inputs.scope }} --zephyr-base=$ZEPHYR_BASE --platform=qemu_cortex_m3 --platform=qemu_cortex_m3 --platform=qemu_x86 -v --results-json=twister-out/results_${{matrix.subset}}.json -n auto --splits=${MATRIX_SIZE} --group=${{ matrix.subset }}
+          echo "Running scope: ${{ inputs.scope }}"
+          pytest ${{ inputs.scope }} --zephyr-base=$ZEPHYR_BASE --platform=qemu_cortex_m3 --platform=qemu_x86 -v --results-json=twister-out/results_${{matrix.subset}}.json -n auto --splits=${MATRIX_SIZE} --group=${{ matrix.subset }}
 
       - name: Upload results
         uses: actions/upload-artifact@v3
