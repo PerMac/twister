@@ -17,7 +17,7 @@ def merge_json_v1(reports=None, path_to=None):
             else:
                 merged_json_v1["testsuites"].extend(loaded_json["testsuites"])
 
-    with open(path_to / 'results_merged.json', 'w') as output_file:
+    with open(path_to / 'results_v1_merged.json', 'w') as output_file:
         json.dump(merged_json_v1, output_file, indent=4)
 
     return 0
