@@ -8,9 +8,6 @@ on:
           description: 'Test scope'
           required: true
           default: "tests/kernel/common"
-  pull_request:
-    branches:
-      - main
 
 jobs:
   call-v2-passing-data:
