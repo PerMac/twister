@@ -2,11 +2,12 @@ name: Dispatch and compare tests run with twister V1 and  V2
 
 on:
   workflow_dispatch:
-    scope:
-      args:
-        description: 'Test scope'
-        required: true
-        default: "tests/kernel/common"
+    inputs:
+      scope:
+        args:
+          description: 'Test scope'
+          required: true
+          default: "tests/kernel/common"
   pull_request:
     branches:
       - main
