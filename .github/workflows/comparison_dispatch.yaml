@@ -34,8 +34,7 @@ jobs:
 
       - name: Merge v2 reports
         run: |
-          ls -R
-          ./twisterV2/src/twister2/scripts/merge_twister_json.py --v2-reports=results/resv2 
+          sudo ./twisterV2/src/twister2/scripts/merge_twister_json.py --v2-reports=results/resv2 
 
       - name: Upload results
         uses: actions/upload-artifact@v3
