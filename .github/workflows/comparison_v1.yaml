@@ -1,0 +1,76 @@
+name: Run tests with twister V1
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: 'A scope to scan for tests'
+        default: 'tests/kernel/common'
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      scope:
+        description: 'A scope to scan for tests'
+        default: 'tests/kernel/common'
+        required: true
+        type: string
+
+jobs:
+  twisterV1:
+    runs-on: ubuntu-latest
+    name: Run tests with twisterV1
+    container:
+      image: ghcr.io/zephyrproject-rtos/ci:v0.24.6
+      options: '--entrypoint /bin/bash'
+    strategy:
+      fail-fast: false
+      matrix:
+        subset: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    env:
+      MATRIX_SIZE: 10
+      ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains/zephyr-sdk-0.15.2
+      BASE_REF: ${{ github.base_ref }}
+      ZEPHYR_BASE: ""
+    steps:
+      - name: Apply container owner mismatch workaround
+        run: |
+          # FIXME: The owner UID of the GITHUB_WORKSPACE directory may not
+          #        match the container user UID because of the way GitHub
+          #        Actions runner is implemented. Remove this workaround when
+          #        GitHub comes up with a fundamental fix for this problem.
+          git config --global --add safe.directory ${GITHUB_WORKSPACE}
+
+      - name: Checkout Zephyr
+        uses: actions/checkout@v3
+        with:
+          repository: 'zephyrproject-rtos/zephyr'
+          path: 'zephyr'
+
+      - name: Configure environment
+        working-directory: zephyr
+        run: |
+          echo "ZEPHYR_BASE=$PWD" >> $GITHUB_ENV
+          west init -l . || true
+          west update --narrow
+
+      - name: Run twister
+        working-directory: zephyr
+        shell: bash
+        run: |
+          export ZEPHYR_BASE
+          export SCOPE=""
+          for folder in ${{ inputs.scope }}
+          do
+              SCOPE+=" -T $folder"
+          done
+          echo "Running scope: $SCOPE"
+          ./scripts/twister $SCOPE --platform=qemu_cortex_m3 --platform=qemu_x86 -v --subset ${{ matrix.subset }}/${MATRIX_SIZE} --retry-failed 3
+          # Add unique name to the results for the purpouse of uploading 
+          cp zephyr/twister-out/twister.json zephyr/twister-out/results_${{ matrix.subset }}.json || true
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: report_twisterV1
+          path: zephyr/twister-out/results_${{ matrix.subset }}.json
