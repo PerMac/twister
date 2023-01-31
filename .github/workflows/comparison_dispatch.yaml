@@ -41,6 +41,7 @@ jobs:
           python ./twisterV2/src/twister2/scripts/merge_twister_json.py --v1-reports=results/resv1 
 
       - name: Upload results
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: report_merged_twisterV1
@@ -68,6 +69,7 @@ jobs:
           python ./twisterV2/src/twister2/scripts/merge_twister_json.py --v2-reports=results/resv2 
 
       - name: Upload results
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: report_merged_twisterV2
