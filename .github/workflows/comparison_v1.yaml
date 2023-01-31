@@ -71,6 +71,7 @@ jobs:
 
       - name: Upload results
         uses: actions/upload-artifact@v3
+        if: ${{ always() }}
         with:
           name: report_twisterV1
           path: zephyr/twister-out/results_${{ matrix.subset }}.json
