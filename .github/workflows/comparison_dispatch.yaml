@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Prepare comparison report
     if: ${{ always() }}
-    needs: [call-v1-passing-data, call-v2-passing-data]
+    needs: [handle-v1-reports, handle-v2-reports]
     steps:
       - name: Download artifacts v1
         uses: actions/download-artifact@v3
