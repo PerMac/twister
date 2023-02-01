@@ -68,6 +68,7 @@ jobs:
           ./scripts/twister $SCOPE --platform=qemu_cortex_m3 --platform=qemu_x86 -v --subset ${{ matrix.subset }}/${MATRIX_SIZE} --retry-failed 3
 
       - name: Copy results
+        if: ${{ always() }}
         working-directory: zephyr
         run: |
           # Add unique name to the results for the purpouse of uploading 
