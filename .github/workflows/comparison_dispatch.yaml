@@ -85,12 +85,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: results
-          name: results_v1_merged.json
+          name: report_merged_twisterV1
       - name: Download artifacts v2
         uses: actions/download-artifact@v3
         with:
           path: results
-          name: results_v2_merged.json
+          name: report_merged_twisterV2
 
       - name: Checkout Twister
         uses: actions/checkout@v3
