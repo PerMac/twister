@@ -66,8 +66,13 @@ jobs:
           done
           echo "Running scope: $SCOPE"
           ./scripts/twister $SCOPE --platform=qemu_cortex_m3 --platform=qemu_x86 -v --subset ${{ matrix.subset }}/${MATRIX_SIZE} --retry-failed 3
+
+      - name: Copy results
+        working-directory: zephyr
+        run: |
           # Add unique name to the results for the purpouse of uploading 
-          cp twister-out/twister.json twister-out/results_${{ matrix.subset }}.json || true
+          echo "copy results"
+          cp twister-out/twister.json twister-out/results_${{ matrix.subset }}.json
 
       - name: Upload results
         uses: actions/upload-artifact@v3
