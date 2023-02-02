@@ -9,7 +9,7 @@ from collections import Counter
 from typing import Sequence
 
 import pytest
-from pytest_subtests import SubTestReport
+from twister2.log_parser.subtests_handler import SubTestReport
 
 from twister2.report.base_report_writer import BaseReportWriter
 from twister2.report.helper import (

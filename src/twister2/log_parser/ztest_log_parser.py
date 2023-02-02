@@ -11,10 +11,10 @@ from dataclasses import dataclass
 from typing import Iterator
 
 import pytest
-from pytest_subtests import SubTests
 
 from twister2.exceptions import TwisterFatalError
 from twister2.log_parser.log_parser_abstract import LogParserAbstract
+from twister2.log_parser.subtests_handler import SubTests
 
 PROJECT_EXECUTION_SUCCESSFUL: str = 'PROJECT EXECUTION SUCCESSFUL'
 PROJECT_EXECUTION_FAILED: str = 'PROJECT EXECUTION FAILED'

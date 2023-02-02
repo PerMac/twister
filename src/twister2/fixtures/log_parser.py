@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 import pytest
-from pytest_subtests import SubTests
+from twister2.log_parser.subtests_handler import SubTests
 
 from twister2.device.device_abstract import DeviceAbstract
 from twister2.fixtures.common import SetupTestManager
