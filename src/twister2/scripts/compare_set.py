@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import argparse
 
-expected_statuses = ['passed', 'failed', 'error', 'skipped']
+expected_statuses = ['passed', 'failed', 'error', 'skipped', 'filtered']
 
 
 def parse_v1_tests(data):
@@ -10,6 +10,8 @@ def parse_v1_tests(data):
     for test in data['testsuites']:
         if test['status'] not in expected_statuses:
             continue
+        if test['status'] == "filtered":
+            test['status'] = "skipped"
         suite, test_name = test["name"].rsplit('/', 1)
         name = f'{suite}::{test_name}[{test["platform"]}][{test["status"]}]'
         tests.add(name)
