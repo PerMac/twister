@@ -164,3 +164,78 @@ class BuildManager:
                 msg = f'Timed out waiting for another thread to finish building: {self.build_config.build_dir}'
                 logger.error(msg)
                 raise TwisterBuildException(msg)
+
+    def cleanup_artifacts(self, cleanup_version='pass', additional_keep=None):
+        if additional_keep is None:
+            additional_keep = []
+
+        logger.debug('Cleaning up %s', self.build_config.build_dir)
+        allow = [
+            os.path.join('zephyr', '.config'),
+            'handler.log',
+            'build.log',
+            'device.log',
+            'recording.csv',
+            # below ones are needed to make --test-only work as well
+            'Makefile',
+            'CMakeCache.txt',
+            'build.ninja',
+            os.path.join('CMakeFiles', 'rules.ninja')
+        ]
+
+        allow += additional_keep
+
+        if cleanup_version == 'all':
+            allow += [os.path.join('twister', 'testsuite_extra.conf')]
+
+        allow = [os.path.join(self.build_config.build_dir, file) for file in allow]
+
+        for dirpath, dirnames, filenames in os.walk(self.build_config.build_dir, topdown=False):
+            for name in filenames:
+                path = os.path.join(dirpath, name)
+                if path not in allow:
+                    os.remove(path)
+            # Remove empty directories and symbolic links to directories
+            for dir in dirnames:
+                path = os.path.join(dirpath, dir)
+                if os.path.islink(path):
+                    os.remove(path)
+                elif not os.listdir(path):
+                    os.rmdir(path)
+
+    def cleanup_device_testing_artifacts(self, binaries=None):
+        if binaries is None:
+            binaries = []
+        logger.debug('Cleaning up for Device Testing %d', self.build_config.build_dir)
+
+        sanitizelist = [
+            'CMakeCache.txt',
+            os.path.join('zephyr', 'runners.yaml'),
+        ]
+
+        # TODO: add handling for platform.binaries
+        if binaries:
+            keep = []
+            for binary in binaries:
+                keep.append(os.path.join('zephyr', binary))
+        else:
+            keep = [
+                os.path.join('zephyr', 'zephyr.hex'),
+                os.path.join('zephyr', 'zephyr.bin'),
+                os.path.join('zephyr', 'zephyr.elf'),
+            ]
+
+        keep += sanitizelist
+
+        self.cleanup_artifacts(keep)
+
+        # sanitize paths so files are relocatable
+        for file in sanitizelist:
+            file = os.path.join(self.build_config.build_dir, file)
+
+            with open(file, 'rt') as fin:
+                data = fin.read()
+                data = data.replace(self.build_config.zephyr_base + '/', '')
+
+            with open(file, 'wt') as fin:
+                fin.write(data)
