@@ -184,10 +184,12 @@ def pytest_addoption(parser: pytest.Parser):
     )
     twister_group.addoption(
         '-M', '--runtime-artifact-cleanup',
-        choices=('pass', 'all'),
-        help='Cleanup test artifacts. "pass" option only removes artifacts of '
-             'passing or skipping tests. If you wish to remove all artifacts '
-             'including those of failed tests, use "all"'
+        action='store',
+        default='no',
+        choices=('no', 'all', 'pass'),
+        # help='Cleanup test artifacts. The default behavior is "pass"'
+        #      'which only removes artifacts of passing tests. If you wish to'
+        #      'remove all artifacts including those of failed tests, use "all".'
     )
 
 

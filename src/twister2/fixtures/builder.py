@@ -9,7 +9,11 @@ from typing import Generator
 
 import pytest
 
-from twister2.builder.build_helper import CMakeExtraArgsConfig, CMakeExtraArgsGenerator
+from twister2.builder.build_helper import (
+    ArtifactsCleaner,
+    CMakeExtraArgsConfig,
+    CMakeExtraArgsGenerator,
+)
 from twister2.builder.build_manager import BuildManager
 from twister2.builder.builder_abstract import BuildConfig, BuilderAbstract
 from twister2.builder.factory import BuilderFactory
@@ -35,11 +39,14 @@ def fixture_build_manager(
 
     spec.output_dir = Path(twister_config.output_dir).resolve()
 
+    build_dir = spec.build_dir
+    zephyr_base = setup_manager.twister_config.zephyr_base
+
     cmake_args_config = CMakeExtraArgsConfig(
         run_id=spec.run_id,
         extra_args_spec=spec.extra_args,
         extra_configs=spec.extra_configs,
-        build_dir=spec.build_dir,
+        build_dir=build_dir,
         fifo_file=spec.fifo_file,
         device_type=setup_manager.get_device_type(),
         extra_args_cli=twister_config.extra_args_cli,
@@ -51,11 +58,11 @@ def fixture_build_manager(
     cmake_extra_args = args_generator.generate()
 
     build_config = BuildConfig(
-        zephyr_base=setup_manager.twister_config.zephyr_base,
+        zephyr_base=zephyr_base,
         source_dir=spec.source_dir,
         platform_arch=platform.arch,
         platform_name=platform.identifier,
-        build_dir=spec.build_dir,
+        build_dir=build_dir,
         output_dir=request.config.option.output_dir,
         scenario=spec.scenario,
         cmake_extra_args=cmake_extra_args,
@@ -69,12 +76,9 @@ def fixture_build_manager(
 
     yield build_manager
 
-    if (cleanup_version := request.config.option.runtime_artifact_cleanup) is not None:
-        test_failed = getattr(request.node, '_test_failed', False)
-        if cleanup_version == 'all' or (cleanup_version == 'pass' and not test_failed):
-            build_manager.cleanup_artifacts(cleanup_version=cleanup_version)
-
-    # TODO: add handling for cleanup_device_testing_artifacts and passing platform.binaries
+    if (option := request.config.option.runtime_artifact_cleanup) != 'no':
+        cleaner = ArtifactsCleaner(build_dir, option, zephyr_base)
+        cleaner.cleanup_artifacts()
 
 
 @pytest.fixture(name='builder', scope='function')
